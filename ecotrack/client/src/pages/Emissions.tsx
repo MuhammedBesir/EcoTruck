@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getEmissions, createEmission, approveEmission, rejectEmission } from "../api/emissions";
+import {
+  getEmissions,
+  createEmission,
+  approveEmission,
+  rejectEmission,
+} from "../api/emissions";
 import { useAppContext } from "../context/AppContext";
 import { LoadingSpinner } from "../components/shared/LoadingSpinner";
 import { ScopeBadge } from "../components/shared/ScopeBadge";
@@ -13,21 +18,37 @@ const CAN_APPROVE = ["admin", "manager"] as const;
 
 function StatusBadge({ status }: { status: EmissionActivity["status"] }) {
   const styles = {
-    pending:  "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
-    approved: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+    pending:
+      "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+    approved:
+      "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
     rejected: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
   };
-  const labels = { pending: "Pending", approved: "Approved", rejected: "Rejected" };
+  const labels = {
+    pending: "Pending",
+    approved: "Approved",
+    rejected: "Rejected",
+  };
   return (
-    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${styles[status]}`}>
+    <span
+      className={`px-2 py-0.5 rounded-full text-xs font-medium ${styles[status]}`}
+    >
       {labels[status]}
     </span>
   );
 }
 
-function AddEmissionModal({ onClose, isSupplier }: { onClose: () => void; isSupplier: boolean }) {
+function AddEmissionModal({
+  onClose,
+  isSupplier,
+}: {
+  onClose: () => void;
+  isSupplier: boolean;
+}) {
   const qc = useQueryClient();
-  const [form, setForm] = useState<Partial<EmissionActivity>>({ scope: isSupplier ? 3 : 1 });
+  const [form, setForm] = useState<Partial<EmissionActivity>>({
+    scope: isSupplier ? 3 : 1,
+  });
 
   const mutation = useMutation({
     mutationFn: createEmission,
@@ -42,18 +63,28 @@ function AddEmissionModal({ onClose, isSupplier }: { onClose: () => void; isSupp
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white dark:bg-gray-900 rounded-xl shadow-xl w-full max-w-lg p-6">
         <div className="flex justify-between items-center mb-5">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-white">Add Emission Activity</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+            Add Emission Activity
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 text-xl"
+          >
+            &times;
+          </button>
         </div>
 
         {isSupplier && (
           <div className="mb-4 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg text-sm text-blue-700 dark:text-blue-400">
-            As a supplier you can only submit <strong>Scope 3</strong> emissions.
+            As a supplier you can only submit <strong>Scope 3</strong>{" "}
+            emissions.
           </div>
         )}
 
         {mutation.isError && (
-          <p className="mb-4 text-sm text-red-600">{(mutation.error as Error).message}</p>
+          <p className="mb-4 text-sm text-red-600">
+            {(mutation.error as Error).message}
+          </p>
         )}
 
         <form
@@ -76,10 +107,17 @@ function AddEmissionModal({ onClose, isSupplier }: { onClose: () => void; isSupp
                 <select
                   className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-sm"
                   value={form.scope}
-                  onChange={(e) => setForm({ ...form, scope: Number(e.target.value) as 1 | 2 | 3 })}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      scope: Number(e.target.value) as 1 | 2 | 3,
+                    })
+                  }
                 >
                   {SCOPE_OPTIONS.map((s) => (
-                    <option key={s} value={s}>Scope {s}</option>
+                    <option key={s} value={s}>
+                      Scope {s}
+                    </option>
                   ))}
                 </select>
               )}
@@ -92,7 +130,9 @@ function AddEmissionModal({ onClose, isSupplier }: { onClose: () => void; isSupp
                 type="date"
                 required
                 className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-sm"
-                onChange={(e) => setForm({ ...form, activity_date: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, activity_date: e.target.value })
+                }
               />
             </div>
           </div>
@@ -105,7 +145,9 @@ function AddEmissionModal({ onClose, isSupplier }: { onClose: () => void; isSupp
               type="text"
               placeholder="e.g. Natural Gas Boiler, Freight Transport"
               className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-sm"
-              onChange={(e) => setForm({ ...form, activity_type: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, activity_type: e.target.value })
+              }
             />
           </div>
 
@@ -120,7 +162,9 @@ function AddEmissionModal({ onClose, isSupplier }: { onClose: () => void; isSupp
                 min="0"
                 required
                 className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-sm"
-                onChange={(e) => setForm({ ...form, co2e_kg: Number(e.target.value) })}
+                onChange={(e) =>
+                  setForm({ ...form, co2e_kg: Number(e.target.value) })
+                }
               />
             </div>
             {!isSupplier && (
@@ -132,14 +176,21 @@ function AddEmissionModal({ onClose, isSupplier }: { onClose: () => void; isSupp
                   type="number"
                   min="1"
                   className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-sm"
-                  onChange={(e) => setForm({ ...form, facility_id: Number(e.target.value) || undefined })}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      facility_id: Number(e.target.value) || undefined,
+                    })
+                  }
                 />
               </div>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Notes</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Notes
+            </label>
             <textarea
               rows={3}
               className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 bg-white dark:bg-gray-800 text-sm"
@@ -148,10 +199,18 @@ function AddEmissionModal({ onClose, isSupplier }: { onClose: () => void; isSupp
           </div>
 
           <div className="flex justify-end gap-3 pt-2">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900"
+            >
               Cancel
             </button>
-            <button type="submit" disabled={mutation.isPending} className="btn-primary text-sm">
+            <button
+              type="submit"
+              disabled={mutation.isPending}
+              className="btn-primary text-sm"
+            >
               {mutation.isPending ? "Saving…" : "Add Emission"}
             </button>
           </div>
@@ -191,16 +250,34 @@ export default function Emissions() {
 
   const approveMutation = useMutation<EmissionActivity, Error, number>({
     mutationFn: approveEmission,
-    onMutate: (id) => { setApprovingId(id); setActionError(""); },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ["emissions"] }); setApprovingId(null); },
-    onError: (err) => { setActionError(err.message); setApprovingId(null); },
+    onMutate: (id) => {
+      setApprovingId(id);
+      setActionError("");
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["emissions"] });
+      setApprovingId(null);
+    },
+    onError: (err) => {
+      setActionError(err.message);
+      setApprovingId(null);
+    },
   });
 
   const rejectMutation = useMutation<EmissionActivity, Error, number>({
     mutationFn: rejectEmission,
-    onMutate: (id) => { setRejectingId(id); setActionError(""); },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ["emissions"] }); setRejectingId(null); },
-    onError: (err) => { setActionError(err.message); setRejectingId(null); },
+    onMutate: (id) => {
+      setRejectingId(id);
+      setActionError("");
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["emissions"] });
+      setRejectingId(null);
+    },
+    onError: (err) => {
+      setActionError(err.message);
+      setRejectingId(null);
+    },
   });
 
   const totalPages = data ? Math.ceil(data.total / 50) : 1;
@@ -210,43 +287,90 @@ export default function Emissions() {
 
   return (
     <div className="space-y-5">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Emission Activities</h1>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+        Emission Activities
+      </h1>
 
       {/* Filters + Add Button */}
       <div className="card !p-4">
         <div className="flex flex-wrap gap-4 items-end">
           {!isSupplier && (
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Scope</label>
+              <label className="block text-xs font-medium text-gray-500 mb-1">
+                Scope
+              </label>
               <select
                 className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800"
                 value={scope ?? ""}
-                onChange={(e) => { setScope(e.target.value ? (Number(e.target.value) as 1 | 2 | 3) : undefined); setPage(1); }}
+                onChange={(e) => {
+                  setScope(
+                    e.target.value
+                      ? (Number(e.target.value) as 1 | 2 | 3)
+                      : undefined
+                  );
+                  setPage(1);
+                }}
               >
                 <option value="">All Scopes</option>
-                {[1, 2, 3].map((s) => <option key={s} value={s}>Scope {s}</option>)}
+                {[1, 2, 3].map((s) => (
+                  <option key={s} value={s}>
+                    Scope {s}
+                  </option>
+                ))}
               </select>
             </div>
           )}
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">From</label>
-            <input type="date" className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800"
-              value={dateFrom} onChange={(e) => { setDateFrom(e.target.value); setPage(1); }} />
+            <label className="block text-xs font-medium text-gray-500 mb-1">
+              From
+            </label>
+            <input
+              type="date"
+              className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800"
+              value={dateFrom}
+              onChange={(e) => {
+                setDateFrom(e.target.value);
+                setPage(1);
+              }}
+            />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">To</label>
-            <input type="date" className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800"
-              value={dateTo} onChange={(e) => { setDateTo(e.target.value); setPage(1); }} />
+            <label className="block text-xs font-medium text-gray-500 mb-1">
+              To
+            </label>
+            <input
+              type="date"
+              className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800"
+              value={dateTo}
+              onChange={(e) => {
+                setDateTo(e.target.value);
+                setPage(1);
+              }}
+            />
           </div>
-          <button className="text-sm text-gray-500 hover:text-gray-900 underline"
-            onClick={() => { setScope(undefined); setDateFrom(""); setDateTo(""); setPage(1); }}>
+          <button
+            className="text-sm text-gray-500 hover:text-gray-900 underline"
+            onClick={() => {
+              setScope(undefined);
+              setDateFrom("");
+              setDateTo("");
+              setPage(1);
+            }}
+          >
             Clear
           </button>
-          {data && <span className="text-sm text-gray-400">{data.total.toLocaleString()} records</span>}
+          {data && (
+            <span className="text-sm text-gray-400">
+              {data.total.toLocaleString()} records
+            </span>
+          )}
         </div>
         {canAdd && (
           <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
-            <button className="btn-primary text-sm w-full" onClick={() => setShowModal(true)}>
+            <button
+              className="btn-primary text-sm w-full"
+              onClick={() => setShowModal(true)}
+            >
               + Add Emission
             </button>
           </div>
@@ -262,34 +386,61 @@ export default function Emissions() {
       {/* Table */}
       <div className="card !p-0 overflow-hidden">
         {isLoading ? (
-          <div className="p-8"><LoadingSpinner /></div>
+          <div className="p-8">
+            <LoadingSpinner />
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
                 <tr>
                   {[
-                    "Date", "Company", "Facility", "Scope",
-                    "Activity Type", "CO₂e (kg)", "Recorded By",
+                    "Date",
+                    "Company",
+                    "Facility",
+                    "Scope",
+                    "Activity Type",
+                    "CO₂e (kg)",
+                    "Recorded By",
                     "Status",
                     ...(canApprove ? ["Actions"] : []),
                   ].map((h) => (
-                    <th key={h} className="px-4 py-3 text-left font-medium whitespace-nowrap">{h}</th>
+                    <th
+                      key={h}
+                      className="px-4 py-3 text-left font-medium whitespace-nowrap"
+                    >
+                      {h}
+                    </th>
                   ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                 {data?.data.map((ea) => (
-                  <tr key={ea.activity_id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50">
-                    <td className="px-4 py-3 text-gray-500 whitespace-nowrap">{ea.activity_date?.slice(0, 10)}</td>
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{ea.company_name ?? "—"}</td>
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{ea.facility_name ?? "—"}</td>
-                    <td className="px-4 py-3"><ScopeBadge scope={ea.scope} /></td>
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{ea.activity_type ?? "—"}</td>
+                  <tr
+                    key={ea.activity_id}
+                    className="hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                  >
+                    <td className="px-4 py-3 text-gray-500 whitespace-nowrap">
+                      {ea.activity_date?.slice(0, 10)}
+                    </td>
+                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">
+                      {ea.company_name ?? "—"}
+                    </td>
+                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">
+                      {ea.facility_name ?? "—"}
+                    </td>
+                    <td className="px-4 py-3">
+                      <ScopeBadge scope={ea.scope} />
+                    </td>
+                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">
+                      {ea.activity_type ?? "—"}
+                    </td>
                     <td className="px-4 py-3 font-mono font-medium text-gray-900 dark:text-white">
                       {Number(ea.co2e_kg).toLocaleString()}
                     </td>
-                    <td className="px-4 py-3 text-gray-500">{ea.recorded_by_name ?? "—"}</td>
+                    <td className="px-4 py-3 text-gray-500">
+                      {ea.recorded_by_name ?? "—"}
+                    </td>
                     <td className="px-4 py-3">
                       <StatusBadge status={ea.status ?? "pending"} />
                     </td>
@@ -298,22 +449,34 @@ export default function Emissions() {
                         {(ea.status ?? "pending") === "pending" ? (
                           <div className="flex gap-2">
                             <button
-                              onClick={() => approveMutation.mutate(ea.activity_id)}
-                              disabled={approvingId === ea.activity_id || rejectingId === ea.activity_id}
+                              onClick={() =>
+                                approveMutation.mutate(ea.activity_id)
+                              }
+                              disabled={
+                                approvingId === ea.activity_id ||
+                                rejectingId === ea.activity_id
+                              }
                               className="px-2 py-1 text-xs bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400 rounded font-medium disabled:opacity-50"
                             >
                               {approvingId === ea.activity_id ? "…" : "Approve"}
                             </button>
                             <button
-                              onClick={() => rejectMutation.mutate(ea.activity_id)}
-                              disabled={approvingId === ea.activity_id || rejectingId === ea.activity_id}
+                              onClick={() =>
+                                rejectMutation.mutate(ea.activity_id)
+                              }
+                              disabled={
+                                approvingId === ea.activity_id ||
+                                rejectingId === ea.activity_id
+                              }
                               className="px-2 py-1 text-xs bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 rounded font-medium disabled:opacity-50"
                             >
                               {rejectingId === ea.activity_id ? "…" : "Reject"}
                             </button>
                           </div>
                         ) : (
-                          <span className="text-xs text-gray-400">{ea.approved_by_name ?? "—"}</span>
+                          <span className="text-xs text-gray-400">
+                            {ea.approved_by_name ?? "—"}
+                          </span>
                         )}
                       </td>
                     )}
@@ -326,19 +489,34 @@ export default function Emissions() {
 
         {totalPages > 1 && (
           <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
-            <span className="text-sm text-gray-500">Page {page} of {totalPages}</span>
+            <span className="text-sm text-gray-500">
+              Page {page} of {totalPages}
+            </span>
             <div className="flex gap-2">
-              <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}
-                className="px-3 py-1 text-sm border rounded-lg disabled:opacity-40">Prev</button>
-              <button disabled={page === totalPages} onClick={() => setPage((p) => p + 1)}
-                className="px-3 py-1 text-sm border rounded-lg disabled:opacity-40">Next</button>
+              <button
+                disabled={page === 1}
+                onClick={() => setPage((p) => p - 1)}
+                className="px-3 py-1 text-sm border rounded-lg disabled:opacity-40"
+              >
+                Prev
+              </button>
+              <button
+                disabled={page === totalPages}
+                onClick={() => setPage((p) => p + 1)}
+                className="px-3 py-1 text-sm border rounded-lg disabled:opacity-40"
+              >
+                Next
+              </button>
             </div>
           </div>
         )}
       </div>
 
       {showModal && (
-        <AddEmissionModal onClose={() => setShowModal(false)} isSupplier={isSupplier} />
+        <AddEmissionModal
+          onClose={() => setShowModal(false)}
+          isSupplier={isSupplier}
+        />
       )}
     </div>
   );

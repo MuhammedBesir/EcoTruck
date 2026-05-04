@@ -105,50 +105,52 @@ export default function Suppliers() {
       {activeTab === "list" && (
         <>
           {/* Filters */}
-          <div className="card !p-4 flex flex-wrap gap-4 items-end">
-            <div className="flex-1 min-w-48">
-              <label className="block text-xs font-medium text-gray-500 mb-1">
-                Search
-              </label>
-              <input
-                type="text"
-                placeholder="Supplier name…"
-                className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+          <div className="card !p-4">
+            <div className="flex flex-wrap gap-4 items-end">
+              <div className="flex-1 min-w-48">
+                <label className="block text-xs font-medium text-gray-500 mb-1">
+                  Search
+                </label>
+                <input
+                  type="text"
+                  placeholder="Supplier name…"
+                  className="w-full border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1">
+                  Country
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Germany"
+                  className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-500 mb-1">
+                  Status
+                </label>
+                <select
+                  className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800"
+                  value={verified}
+                  onChange={(e) =>
+                    setVerified(e.target.value as "" | "true" | "false")
+                  }
+                >
+                  <option value="">All</option>
+                  <option value="true">Verified</option>
+                  <option value="false">Unverified</option>
+                </select>
+              </div>
+              <span className="text-sm text-gray-400">
+                {suppliers.length} suppliers
+              </span>
             </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">
-                Country
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. Germany"
-                className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">
-                Status
-              </label>
-              <select
-                className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800"
-                value={verified}
-                onChange={(e) =>
-                  setVerified(e.target.value as "" | "true" | "false")
-                }
-              >
-                <option value="">All</option>
-                <option value="true">Verified</option>
-                <option value="false">Unverified</option>
-              </select>
-            </div>
-            <span className="text-sm text-gray-400">
-              {suppliers.length} suppliers
-            </span>
           </div>
 
           {/* Supplier Cards */}
