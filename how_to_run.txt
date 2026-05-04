@@ -1,0 +1,96 @@
+============================================================
+  EcoTrack – Supply Chain Carbon Management System
+  How to Run Instructions
+  Group 17 | May 2026
+============================================================
+
+PREREQUISITES
+-------------
+- Docker Desktop (or Docker Engine + Docker Compose plugin)
+    https://docs.docker.com/get-docker/
+- Git (to clone the repository)
+    https://git-scm.com/
+
+No need to install Node.js, npm, or PostgreSQL separately —
+everything runs inside Docker containers.
+
+
+OPTION A: RUN FROM GITHUB REPOSITORY
+--------------------------------------
+1. Clone the repository:
+     git clone https://github.com/MuhammedBesir/EcoTruck.git
+     cd EcoTruck/ecotrack
+
+2. Start all services (database + backend + frontend):
+     docker compose up --build
+
+3. Wait until you see the following lines in the terminal:
+     ✓ Server running on http://localhost:3001
+     ✓ Client ready at http://localhost:5173
+   (This may take 2–3 minutes on the first run while images build.)
+
+4. Open your browser and go to:
+     http://localhost:5173
+
+
+OPTION B: RUN FROM SUBMITTED ZIP FILE
+---------------------------------------
+1. Extract the zip file:
+     unzip ecotrack_source.zip
+     cd ecotrack
+
+2. Start all services:
+     docker compose up --build
+
+3. Open your browser and go to:
+     http://localhost:5173
+
+
+
+PORT MAPPING
+-------------
+Service     | Host Port | Container Port
+------------|-----------|----------------
+PostgreSQL  |   5433    |   5432
+Backend API |   3001    |   3001
+Frontend    |   5173    |   5173
+
+
+STOPPING THE APPLICATION
+--------------------------
+Press Ctrl+C in the terminal where docker compose is running, then:
+  docker compose down
+
+To also remove the database volume (full reset):
+  docker compose down -v
+
+
+TROUBLESHOOTING
+----------------
+• Port already in use:
+  Make sure ports 5173, 3001, and 5433 are free on your machine.
+  To free a port: sudo lsof -ti:<PORT> | xargs kill
+
+• Database connection errors on first start:
+  The server retries automatically. Wait 10–20 seconds.
+
+• "Cannot connect to Docker daemon":
+  Start Docker Desktop or run: sudo systemctl start docker
+
+• Frontend shows blank page:
+  Clear browser cache or open http://localhost:5173 in incognito mode.
+
+• Rebuild after code changes:
+  docker compose up --build
+
+
+ENVIRONMENT VARIABLES (already configured in docker-compose.yml)
+------------------------------------------------------------------
+POSTGRES_USER=ecotrack_user
+POSTGRES_PASSWORD=ecotrack_pass
+POSTGRES_DB=ecotrack
+JWT_SECRET=ecotrack_jwt_secret_change_in_production_2026
+JWT_EXPIRES_IN=7d
+
+
+
