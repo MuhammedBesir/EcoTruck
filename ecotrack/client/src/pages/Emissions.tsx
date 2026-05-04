@@ -210,45 +210,47 @@ export default function Emissions() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Emission Activities</h1>
-        {canAdd && (
-          <button className="btn-primary text-sm" onClick={() => setShowModal(true)}>
-            + Add Emission
-          </button>
-        )}
-      </div>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Emission Activities</h1>
 
-      {/* Filters */}
-      <div className="card !p-4 flex flex-wrap gap-4 items-end">
-        {!isSupplier && (
+      {/* Filters + Add Button */}
+      <div className="card !p-4">
+        <div className="flex flex-wrap gap-4 items-end">
+          {!isSupplier && (
+            <div>
+              <label className="block text-xs font-medium text-gray-500 mb-1">Scope</label>
+              <select
+                className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800"
+                value={scope ?? ""}
+                onChange={(e) => { setScope(e.target.value ? (Number(e.target.value) as 1 | 2 | 3) : undefined); setPage(1); }}
+              >
+                <option value="">All Scopes</option>
+                {[1, 2, 3].map((s) => <option key={s} value={s}>Scope {s}</option>)}
+              </select>
+            </div>
+          )}
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">Scope</label>
-            <select
-              className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800"
-              value={scope ?? ""}
-              onChange={(e) => { setScope(e.target.value ? (Number(e.target.value) as 1 | 2 | 3) : undefined); setPage(1); }}
-            >
-              <option value="">All Scopes</option>
-              {[1, 2, 3].map((s) => <option key={s} value={s}>Scope {s}</option>)}
-            </select>
+            <label className="block text-xs font-medium text-gray-500 mb-1">From</label>
+            <input type="date" className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800"
+              value={dateFrom} onChange={(e) => { setDateFrom(e.target.value); setPage(1); }} />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1">To</label>
+            <input type="date" className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800"
+              value={dateTo} onChange={(e) => { setDateTo(e.target.value); setPage(1); }} />
+          </div>
+          <button className="text-sm text-gray-500 hover:text-gray-900 underline"
+            onClick={() => { setScope(undefined); setDateFrom(""); setDateTo(""); setPage(1); }}>
+            Clear
+          </button>
+          {data && <span className="text-sm text-gray-400">{data.total.toLocaleString()} records</span>}
+        </div>
+        {canAdd && (
+          <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800">
+            <button className="btn-primary text-sm w-full" onClick={() => setShowModal(true)}>
+              + Add Emission
+            </button>
           </div>
         )}
-        <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">From</label>
-          <input type="date" className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800"
-            value={dateFrom} onChange={(e) => { setDateFrom(e.target.value); setPage(1); }} />
-        </div>
-        <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">To</label>
-          <input type="date" className="border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm bg-white dark:bg-gray-800"
-            value={dateTo} onChange={(e) => { setDateTo(e.target.value); setPage(1); }} />
-        </div>
-        <button className="text-sm text-gray-500 hover:text-gray-900 underline"
-          onClick={() => { setScope(undefined); setDateFrom(""); setDateTo(""); setPage(1); }}>
-          Clear
-        </button>
-        {data && <span className="text-sm text-gray-400">{data.total.toLocaleString()} records</span>}
       </div>
 
       {actionError && (
