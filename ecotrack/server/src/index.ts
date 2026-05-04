@@ -17,14 +17,20 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 const ALLOWED_ORIGINS = [
-  process.env.CLIENT_URL || "http://localhost:5173",
+  process.env.CLIENT_URL,
   "http://localhost:5173",
   "http://10.66.234.122:5173",
-];
+].filter(Boolean) as string[];
+
 app.use(
   cors({
-    origin: (origin, cb) =>
-      cb(null, !origin || ALLOWED_ORIGINS.includes(origin)),
+    origin: (origin, cb) => {
+      if (!origin) return cb(null, true);
+      const allowed =
+        ALLOWED_ORIGINS.includes(origin) ||
+        /^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(origin);
+      cb(allowed ? null : new Error("Not allowed by CORS"), allowed);
+    },
   })
 );
 app.use(express.json());
