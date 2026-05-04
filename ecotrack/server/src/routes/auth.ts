@@ -7,6 +7,9 @@ import { authenticate, requireRole, AuthRequest } from "../middleware/auth";
 
 const router = Router();
 
+const JWT_SECRET = process.env.JWT_SECRET || "fallback_secret";
+const JWT_EXPIRES_IN = "7d";
+
 // POST /api/auth/register
 router.post(
   "/register",
@@ -54,8 +57,8 @@ router.post(
           role: user.role,
           companyId: user.company_id,
         },
-        process.env.JWT_SECRET || "fallback_secret",
-        { expiresIn: process.env.JWT_EXPIRES_IN || "7d" } as jwt.SignOptions
+        JWT_SECRET,
+        { expiresIn: JWT_EXPIRES_IN }
       );
 
       res.status(201).json({ token, user });
@@ -107,8 +110,8 @@ router.post(
           role: user.role,
           companyId: user.company_id,
         },
-        process.env.JWT_SECRET || "fallback_secret",
-        { expiresIn: process.env.JWT_EXPIRES_IN || "7d" } as jwt.SignOptions
+        JWT_SECRET,
+        { expiresIn: JWT_EXPIRES_IN }
       );
 
       const { password_hash: _, ...safeUser } = user;
@@ -208,8 +211,8 @@ router.get(
           role: user.role,
           companyId: user.company_id,
         },
-        process.env.JWT_SECRET || "fallback_secret",
-        { expiresIn: process.env.JWT_EXPIRES_IN || "7d" } as jwt.SignOptions
+        JWT_SECRET,
+        { expiresIn: JWT_EXPIRES_IN }
       );
       res.json({ user, token: freshToken });
     } catch (err) {
