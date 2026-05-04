@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProvider, useAppContext } from "./context/AppContext";
 import { Sidebar } from "./components/shared/Sidebar";
@@ -36,6 +37,7 @@ function HomeRedirect() {
 
 function ProtectedLayout() {
   const { token, authLoading } = useAppContext();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (authLoading) {
     return (
@@ -51,10 +53,16 @@ function ProtectedLayout() {
 
   return (
     <div className="flex min-h-screen bg-eco-bg dark:bg-gray-950">
-      <Sidebar />
-      <div className="flex-1 ml-56 flex flex-col min-h-screen">
-        <TopBar />
-        <main className="flex-1 pt-14 p-6">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-20 bg-black/50 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      <div className="flex-1 md:ml-56 flex flex-col min-h-screen">
+        <TopBar onMenuClick={() => setSidebarOpen(true)} />
+        <main className="flex-1 pt-14 p-4 md:p-6">
           <ErrorBoundary>
             <Routes>
               <Route path="/" element={<HomeRedirect />} />
