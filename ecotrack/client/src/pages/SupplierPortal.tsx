@@ -287,27 +287,19 @@ export default function SupplierPortal() {
             Welcome, {currentUser?.full_name} — manage your emission submissions
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          {myRecord && (
-            <span
-              className={`px-3 py-1 rounded-full text-xs font-medium ${
-                myRecord.verified
-                  ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                  : "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
-              }`}
-            >
-              {myRecord.verified
-                ? "✓ Verified Supplier"
-                : "⏳ Pending Verification"}
-            </span>
-          )}
-          <button
-            className="btn-primary text-sm"
-            onClick={() => setShowModal(true)}
+        {myRecord && (
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-medium ${
+              myRecord.verified
+                ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                : "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
+            }`}
           >
-            + Submit Emission
-          </button>
-        </div>
+            {myRecord.verified
+              ? "✓ Verified Supplier"
+              : "⏳ Pending Verification"}
+          </span>
+        )}
       </div>
 
       {/* Verification status banner */}
@@ -358,6 +350,16 @@ export default function SupplierPortal() {
           sub="awaiting approval"
           color="text-amber-600 dark:text-amber-400"
         />
+      </div>
+
+      {/* Submit Emission Button */}
+      <div className="card !p-4">
+        <button
+          className="btn-primary text-sm w-full"
+          onClick={() => setShowModal(true)}
+        >
+          + Submit Emission
+        </button>
       </div>
 
       {/* Sustainability Rating */}
