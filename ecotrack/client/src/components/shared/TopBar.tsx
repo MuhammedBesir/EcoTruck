@@ -54,7 +54,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
               Company:
             </label>
             <select
-              className="text-sm border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              className="text-sm border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 bg-white dark:bg-gray-800 text-gray-900 dark:text-white max-w-[140px] sm:max-w-xs truncate"
               value={selectedCompany?.company_id ?? ""}
               onChange={(e) => {
                 const found = companies.find(

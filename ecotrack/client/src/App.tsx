@@ -52,7 +52,7 @@ function ProtectedLayout() {
   }
 
   return (
-    <div className="flex min-h-screen bg-eco-bg dark:bg-gray-950">
+    <div className="flex min-h-screen bg-eco-bg dark:bg-gray-950 overflow-x-hidden">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       {sidebarOpen && (
         <div
@@ -60,9 +60,9 @@ function ProtectedLayout() {
           onClick={() => setSidebarOpen(false)}
         />
       )}
-      <div className="flex-1 md:ml-56 flex flex-col min-h-screen">
+      <div className="flex-1 md:ml-56 flex flex-col min-h-screen min-w-0">
         <TopBar onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 pt-14 p-4 md:p-6">
+        <main className="flex-1 pt-14 p-4 md:p-6 overflow-x-hidden">
           <ErrorBoundary>
             <Routes>
               <Route path="/" element={<HomeRedirect />} />
